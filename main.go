@@ -33,7 +33,7 @@ func sendMessage(bot *tgbotapi.BotAPI, text string) {
 }
 
 func runCommand(item configType, bot *tgbotapi.BotAPI) {
-	sendMessage(bot, "🚀 "+item.Url+" is running...")
+	sendMessage(bot, "🚀 "+item.Url+" is deploying...")
 	err := exec.Command("sh", "-c", item.Command).Run()
 	if err != nil {
 		sendMessage(bot, "🙊 "+item.Url+" filed")
