@@ -32,15 +32,19 @@ func sendMessage(bot *tgbotapi.BotAPI, text string) {
 	bot.Send(msg)
 }
 
+func runCommand(item configType, bot *tgbotapi.BotAPI) {
+	sendMessage(bot, "🚀 "+item.Url+" is running...")
+	err := exec.Command("sh", "-c", item.Command).Run()
+	if err != nil {
+		sendMessage(bot, "🙊 "+item.Url+" filed")
+		log.Print(err)
+	}
+	sendMessage(bot, "🎉 "+item.Url+" fineshed!")
+}
+
 func handler(item configType, bot *tgbotapi.BotAPI) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		sendMessage(bot, "🚀 "+item.Url+" is running...")
-		err := exec.Command("sh", "-c", item.Command).Run()
-		if err != nil {
-			sendMessage(bot, "🙊 "+item.Url+" filed")
-			log.Print(err)
-		}
-		sendMessage(bot, "🎉 "+item.Url+" fineshed!")
+		go runCommand(item, bot)
 		w.WriteHeader(http.StatusOK)
 	}
 }
